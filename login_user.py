@@ -1,7 +1,24 @@
 import tkinter as tk
+import json
+
+# create a file to store the registered users
+USERS_FILE = 'users.json'
+
+# function to load users from file
+def load_users():
+    try:
+        with open(USERS_FILE, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+# function to save users to file
+def save_users(users):
+    with open(USERS_FILE, 'w') as f:
+        json.dump(users, f)
 
 # create a dictionary of registered users
-users = {'user1': 'password1', 'user2': 'password2', 'user3': 'password3'}
+users = load_users()
 
 # function to check if user exists and password is correct
 def login():
@@ -19,6 +36,7 @@ def signup():
     username = new_username_entry.get()
     password = new_password_entry.get()
     users[username] = password
+    save_users(users)
     signup_frame.pack_forget()
     login_frame.pack()
 
