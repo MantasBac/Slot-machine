@@ -7,7 +7,7 @@ START_X, START_Y = 0, -300
 X_OFFSET, Y_OFFSET = 20, 0
 
 # Images
-BG_IMAGE_PATH = 'graphics/0/bg.png'
+BG_IMAGE_PATH = 'graphics/0/bgbgbgbg.png'
 GRID_IMAGE_PATH = 'graphics/0/gridline.png'
 GAME_INDICES = [1, 2, 3] # 0 and 4 are outside of play area
 SYM_PATH = 'graphics/0/symbols'
@@ -19,6 +19,7 @@ TEXT_COLOR = 'White'
 UI_FONT = 'graphics/font/kidspace.ttf'
 UI_FONT_SIZE = 30
 WIN_FONT_SIZE = 110
+LOSS_FONT_SIZE = 50
 
 # 5 Symbols for demo
 # symbols = {

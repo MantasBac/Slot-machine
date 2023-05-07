@@ -3,6 +3,7 @@ from reel import *
 from settings import *
 from ui import UI
 from wins import *
+import buttons
 import pygame
 
 class Machine:
@@ -15,7 +16,7 @@ class Machine:
         self.spinning = False
         self.can_animate = False
         self.win_animation_ongoing = False
-
+        
         # Results
         self.prev_result = {0: None, 1: None, 2: None, 3: None, 4: None}
         self.spin_result = {0: None, 1: None, 2: None, 3: None, 4: None}
@@ -53,9 +54,15 @@ class Machine:
                 self.win_animation_ongoing = True
                 self.ui.win_text_angle = random.randint(-4, 4)
 
+    def changebetplus(self): 
+        self.currPlayer.change_bet_plus()
+    
+    def changebetminus(self): 
+        self.currPlayer.change_bet_minus()
+
     def input(self):
         keys = pygame.key.get_pressed()
-
+        
         # Checks for space key, ability to toggle spin, and balance to cover bet size
         if keys[pygame.K_SPACE] and self.can_toggle and self.currPlayer.balance >= self.currPlayer.bet_size:
             self.toggle_spinning()
@@ -63,6 +70,8 @@ class Machine:
             self.currPlayer.place_bet()
             self.machine_balance += self.currPlayer.bet_size
             self.currPlayer.last_payout = None
+            self.currPlayer.last_loss = None
+            
             
     def draw_reels(self, delta_time):
         for reel in self.reel_list:
@@ -108,6 +117,8 @@ class Machine:
         if hits:
             self.can_animate = True
             return hits
+        else: 
+            self.currPlayer.last_loss = self.currPlayer.bet_size #######################################################
 
     def pay_player(self, win_data, curr_player):
         multiplier = 0
@@ -161,6 +172,6 @@ class Machine:
         # machine_balance = "{:.2f}".format(self.machine_balance)
         # if self.currPlayer.last_payout:
         #     last_payout = "{:.2f}".format(self.currPlayer.last_payout)
-        # else:
+        # else: 
         #     last_payout = "N/A"
         # debug(f"Player balance: {debug_player_data['balance']} | Machine balance: {machine_balance} | Last payout: {last_payout}")

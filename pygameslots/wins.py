@@ -1,7 +1,7 @@
-# Helper functions to detect wins
+# function to detect wins
 
 def flip_horizontal(result):
-    # Flip results horizontally to keep them in a more readable list
+    # Flip results horizontally for easier readability
     horizontal_values = []
     for value in result.values():
         horizontal_values.append(value)

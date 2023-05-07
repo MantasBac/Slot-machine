@@ -1,5 +1,7 @@
 from machine import Machine
 from settings import *
+#from player import Player
+import buttons
 import ctypes, pygame, sys
 
 # Maintain resolution regardless of Windows scaling settings
@@ -11,7 +13,7 @@ class Game:
         # General setup
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption('Slot Machine Demo')
+        pygame.display.set_caption('Slot Machine')
         self.clock = pygame.time.Clock()
         self.bg_image = pygame.image.load(BG_IMAGE_PATH).convert_alpha()
         self.grid_image = pygame.image.load(GRID_IMAGE_PATH).convert_alpha()
@@ -26,7 +28,17 @@ class Game:
 
         self.start_time = pygame.time.get_ticks()
 
+        img_plus5 = pygame.image.load('graphics/0/symbols/plus5.png').convert_alpha()
+        button_plus5 = buttons.Button(1500, 910, img_plus5, 0.1) 
+        img_minus5 = pygame.image.load('graphics/0/symbols/minus5.png').convert_alpha()
+        button_minus5 = buttons.Button(1450, 910, img_minus5, 0.1) 
+
         while True:
+            if  button_plus5.draw(self.screen): 
+                self.machine.changebetplus()
+            if  button_minus5.draw(self.screen): 
+                self.machine.changebetminus()
+                
             # Handle quit operation
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

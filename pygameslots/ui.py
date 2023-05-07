@@ -9,6 +9,7 @@ class UI:
         try:
             self.font, self.bet_font = pygame.font.Font(UI_FONT, UI_FONT_SIZE), pygame.font.Font(UI_FONT, UI_FONT_SIZE)
             self.win_font = pygame.font.Font(UI_FONT, WIN_FONT_SIZE)
+            self.loss_font = pygame.font.Font(UI_FONT, LOSS_FONT_SIZE)
         except:
             print("Error loading font!")
             print(f"Currently, the UI_FONT variable is set to {UI_FONT}")
@@ -24,10 +25,10 @@ class UI:
         x, y = 20, self.display_surface.get_size()[1] - 30
         balance_rect = balance_surf.get_rect(bottomleft = (x, y))
 
-        bet_surf = self.bet_font.render("Wager: $" + player_data['bet_size'], True, TEXT_COLOR, None)
+        bet_surf = self.bet_font.render("Bet: $" + player_data['bet_size'], True, TEXT_COLOR, None)
         x = self.display_surface.get_size()[0] - 20
         bet_rect = bet_surf.get_rect(bottomright = (x, y))
-
+        
         # Draw player data
         pygame.draw.rect(self.display_surface, False, balance_rect)
         pygame.draw.rect(self.display_surface, False, bet_rect)
@@ -43,6 +44,16 @@ class UI:
             win_surf = pygame.transform.rotate(win_surf, self.win_text_angle)
             win_rect = win_surf.get_rect(center = (x1, y1))
             self.display_surface.blit(win_surf, win_rect)
+
+
+        if self.player.last_loss and not self.player.last_payout: 
+            last_loss = player_data['last_loss']
+            loss_surf = self.loss_font.render("Lost :( $" + last_loss, True, TEXT_COLOR, None)
+            x1 = 800
+            y1 = self.display_surface.get_size()[1] - 60
+            #loss_surf = pygame.transform.rotate(loss_surf, self.win_text_angle)
+            loss_rect = loss_surf.get_rect(center = (x1, y1))
+            self.display_surface.blit(loss_surf, loss_rect)
 
     def update(self):
         pygame.draw.rect(self.display_surface, 'Black', pygame.Rect(0, 900, 1600, 100))
