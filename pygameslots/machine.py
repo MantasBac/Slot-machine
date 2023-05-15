@@ -1,4 +1,3 @@
-from player import Player
 from reel import *
 from settings import *
 from ui import UI
@@ -7,7 +6,7 @@ import buttons
 import pygame
 
 class Machine:
-    def __init__(self):
+    def __init__(self, player):
         self.display_surface = pygame.display.get_surface()
         self.machine_balance = 10000.00
         self.reel_index = 0
@@ -22,9 +21,9 @@ class Machine:
         self.spin_result = {0: None, 1: None, 2: None, 3: None, 4: None}
 
         self.spawn_reels()
-        self.currPlayer = Player()
+        self.currPlayer = player
         self.ui = UI(self.currPlayer)
-
+        
         # Import sounds
         # self.spin_sound = pygame.mixer.Sound('audio/spinclip.mp3')
         # self.spin_sound.set_volume(0.15)
@@ -57,7 +56,7 @@ class Machine:
     def changebetplus(self): 
         self.currPlayer.change_bet_plus()
     
-    def changebetminus(self): 
+    def changebetminus(self):
         self.currPlayer.change_bet_minus()
 
     def input(self):
@@ -116,6 +115,7 @@ class Machine:
                         hits[horizontal.index(row) + 1] = [sym, longest_seq(possible_win)]
         if hits:
             self.can_animate = True
+            self.ui.win()
             return hits
         else: 
             self.currPlayer.last_loss = self.currPlayer.bet_size #######################################################

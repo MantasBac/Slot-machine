@@ -9,6 +9,7 @@ class Player():
         self.total_won = 0.00
         self.total_wager = 0.00
         self.last_loss = 0.00
+        self.music_volume = 50.00
 
     def get_data(self):
         player_data = {}
@@ -18,6 +19,7 @@ class Player():
         player_data['total_won'] = "{:.2f}".format(self.total_won)
         player_data['total_wager'] = "{:.2f}".format(self.total_wager)
         player_data['last_loss'] = "{:.2f}".format(self.last_loss) if self.last_loss else "N/A"
+        player_data['music_volume'] = "{:.2f}".format(self.music_volume)
         return player_data
 
     def place_bet(self):
@@ -32,3 +34,9 @@ class Player():
     def change_bet_minus(self):
         if  self.bet_size > 5.00:
             self.bet_size -= 5.00
+
+    def chage_music_volume_plus(self):
+        self.music_volume += 5
+
+    def chage_music_volume_minus(self):
+        self.music_volume -= 5

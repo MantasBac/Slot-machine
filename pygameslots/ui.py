@@ -1,9 +1,12 @@
 from player import Player
 from settings import *
 import pygame, random
+from PIL import Image
+from tkinter import Label
 
 class UI:
     def __init__(self, player):
+        self.root = None
         self.player = player
         self.display_surface = pygame.display.get_surface()
         try:
@@ -17,6 +20,10 @@ class UI:
             quit()
         self.win_text_angle = random.randint(-4, 4)
 
+        #---------------------------------------------------------------------
+        
+        #---------------------------------------------------------------------
+
     def display_info(self):
         player_data = self.player.get_data()
 
@@ -28,12 +35,23 @@ class UI:
         bet_surf = self.bet_font.render("Bet: $" + player_data['bet_size'], True, TEXT_COLOR, None)
         x = self.display_surface.get_size()[0] - 20
         bet_rect = bet_surf.get_rect(bottomright = (x, y))
+
+        if float(player_data['music_volume']) < 100:
+            volume_surf = self.bet_font.render("Volume: " + str(int(float(player_data['music_volume']))), True, TEXT_COLOR, None)
+            x, y = 175, self.display_surface.get_size()[1] - 60
+            volume_rect = volume_surf.get_rect(bottomright = (x, y))
+        else:
+            volume_surf = self.bet_font.render("Volume: " + str(int(float(player_data['music_volume']))), True, TEXT_COLOR, None)
+            x, y = 190, self.display_surface.get_size()[1] - 60
+            volume_rect = volume_surf.get_rect(bottomright = (x, y))
         
         # Draw player data
         pygame.draw.rect(self.display_surface, False, balance_rect)
         pygame.draw.rect(self.display_surface, False, bet_rect)
+        pygame.draw.rect(self.display_surface, False, volume_rect)
         self.display_surface.blit(balance_surf, balance_rect)
         self.display_surface.blit(bet_surf, bet_rect)
+        self.display_surface.blit(volume_surf, volume_rect)
 
         # Print last win if applicable
         if self.player.last_payout:
@@ -58,3 +76,20 @@ class UI:
     def update(self):
         pygame.draw.rect(self.display_surface, 'Black', pygame.Rect(0, 900, 1600, 100))
         self.display_info()
+
+    def win(self):
+        start_time = pygame.time.get_ticks()
+        display_time = 1500  # in milliseconds
+        display_image = True
+        self.effect1 = pygame.image.load('graphics/effects/big_win.png').convert_alpha()
+
+        while display_image:
+            # check if it's time to stop displaying the image
+            current_time = pygame.time.get_ticks()
+            if current_time - start_time >= display_time:
+                display_image = False
+
+            # display the image if the flag is True
+            if display_image:
+                self.display_surface.blit(self.effect1, (300, 30))
+                pygame.display.flip()
