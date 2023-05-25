@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 from machine import Machine
@@ -50,8 +51,31 @@ class Game:
 
     # function to save users to file
     def save_users(self, users):
-        with open(USERS_FILE, 'w') as f:
-            json.dump(users, f, indent=4)
+        shutil.copyfile(USERS_FILE, BACKUP_FILE)
+
+        try:
+            with open(USERS_FILE + '.tmp', 'w') as f:
+                json.dump(users, f, indent=4)
+
+            os.replace(USERS_FILE + '.tmp', USERS_FILE)
+
+            if os.path.exists(BACKUP_FILE):
+                os.remove(BACKUP_FILE)
+
+            # with open(USERS_FILE, 'r') as f:
+            #     existing_data = json.load(f)
+            #
+            # existing_data.update(users)
+            #
+            # with open(USERS_FILE, 'w') as f:
+            #     json.dump(existing_data, f, indent=4)
+
+        except Exception as e:
+            # An error occurred, restore the backup file if it exists
+            if os.path.exists(BACKUP_FILE):
+                shutil.copyfile(BACKUP_FILE, USERS_FILE)
+
+            print(f"An error occurred while saving the users: {str(e)}")
 
     def create_music_control_buttons(self):
         # Load the button images
@@ -167,9 +191,6 @@ class Game:
 
         popup_window.mainloop()
 
-        # pygame.quit()
-        # sys.exit()
-
     def run(self):
         users = self.load_users()
         balance = self.load_balance()
@@ -178,12 +199,12 @@ class Game:
         self.display_surface = pygame.display.get_surface()
 
         img_plus5 = pygame.image.load('graphics/0/symbols/plus5.png').convert_alpha()
-        button_plus5 = buttons.Button(1500, 910, img_plus5, 0.1) 
+        button_plus5 = buttons.Button(1500, 910, img_plus5, 0.1)
         img_minus5 = pygame.image.load('graphics/0/symbols/minus5.png').convert_alpha()
-        button_minus5 = buttons.Button(1450, 910, img_minus5, 0.1) 
+        button_minus5 = buttons.Button(1450, 910, img_minus5, 0.1)
 
         img_plus55 = pygame.image.load('graphics/0/symbols/plus5.png').convert_alpha()
-        button_plus55 = buttons.Button(220, 910, img_plus5, 0.1) 
+        button_plus55 = buttons.Button(220, 910, img_plus5, 0.1)
         img_minus55 = pygame.image.load('graphics/0/symbols/minus5.png').convert_alpha()
         button_minus55 = buttons.Button(280, 910, img_minus5, 0.1)
 
@@ -191,18 +212,21 @@ class Game:
         button_menu = buttons.Button(1250, 930, img_menu, 0.18)
 
         img_deposit = pygame.image.load('graphics/0/symbols/deposit.png').convert_alpha()
-        x, y = 340, self.display_surface.get_size()[1] - 70
+        x, y = 340, self.display_surface.get_size()[1] - 90
         button_deposit = buttons.Button(x, y, img_deposit, 0.18)
 
         img_withdraw = pygame.image.load('graphics/0/symbols/withdraw.png').convert_alpha()
-        x, y = 400, self.display_surface.get_size()[1] - 70
+        x, y = 400, self.display_surface.get_size()[1] - 90
         button_withdraw = buttons.Button(x, y, img_withdraw, 0.18)
 
         while True:
             player_data = self.player.get_data()
 
             users[balance[0]][1] = player_data['balance']
+            users[balance[0]][2] = player_data['xp']
+            users[balance[0]][3] = player_data['free_spins']
             self.save_users(users)
+
 
             if  button_plus5.draw(self.screen): 
                 self.machine.changebetplus()

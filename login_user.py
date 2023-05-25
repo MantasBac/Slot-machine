@@ -48,7 +48,7 @@ def login():
         message_label.config(text='Login successful!')
 
         #balances = users[username][1]
-        balances = [username, users[username][0], users[username][1]]
+        balances = [username, users[username][0], users[username][1], users[username][2], users[username][3]]
         save_balance(balances)
         entry = True
         return entry
@@ -70,7 +70,7 @@ def signup():
     elif (balance == ''):
         sign_up_message_label.config(text='Balance field is empty')
     else:
-        users[username] = [password, balance]
+        users[username] = [password, balance, 100, 0]
         save_users(users)
         signup_frame.pack_forget()
         login_frame.pack()

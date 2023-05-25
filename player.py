@@ -14,12 +14,11 @@ class Player():
         self.total_wager = 0.00
         self.last_loss = 0.00
         self.music_volume = 50.00
+        self.xp = int(data[3])
+        self.level = self.determine_level()
+        self.free_spins = int(data[4])
     
     def get_data(self):
-        #import login_user
-        #from login_user import balance
-        #login_user.root.destroy()
-        
         player_data = {}
         player_data['balance'] = "{:.2f}".format(self.balance)
         player_data['bet_size'] = "{:.2f}".format(self.bet_size)
@@ -28,12 +27,19 @@ class Player():
         player_data['total_wager'] = "{:.2f}".format(self.total_wager)
         player_data['last_loss'] = "{:.2f}".format(self.last_loss) if self.last_loss else "N/A"
         player_data['music_volume'] = "{:.2f}".format(self.music_volume)
+        player_data['xp'] = self.xp
+        player_data['free_spins'] = self.free_spins
         return player_data
 
     def place_bet(self):
         bet = self.bet_size
-        self.balance -= bet
-        self.total_wager += bet
+        if self.free_spins == 0:
+            self.balance -= bet
+            self.total_wager += bet
+            self.add_xp(bet)
+        else:
+            self.subtract_free_spins()
+
 
     def change_bet_plus(self):
         if  self.bet_size <= self.balance - 5.00:
@@ -51,3 +57,18 @@ class Player():
 
     def chage_balance_minus(self, value):
         self.balance -= value
+
+    def add_xp(self, value):
+        self.xp += value
+        self.add_free_spins()
+
+    def determine_level(self):
+        return int(self.xp / 100)
+
+    def add_free_spins(self):
+        if self.level < self.determine_level():
+            self.level = self.determine_level()
+            self.free_spins += 10
+
+    def subtract_free_spins(self):
+        self.free_spins -= 1

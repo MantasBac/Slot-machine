@@ -29,28 +29,40 @@ class UI:
 
         # Balance and bet size
         balance_surf = self.font.render("Balance: $" + player_data['balance'], True, TEXT_COLOR, None)
-        x, y = 20, self.display_surface.get_size()[1] - 30
+        x, y = 20, self.display_surface.get_size()[1] - 50
         balance_rect = balance_surf.get_rect(bottomleft = (x, y))
 
+        free_spins_surf = self.font.render("Free Spins: " + str(player_data['free_spins']), True, TEXT_COLOR, None)
+        x, y = 20, self.display_surface.get_size()[1] - 10
+        free_spins_rect = free_spins_surf.get_rect(bottomleft=(x, y))
+
         bet_surf = self.bet_font.render("Bet: $" + player_data['bet_size'], True, TEXT_COLOR, None)
-        x = self.display_surface.get_size()[0] - 20
+        x, y = self.display_surface.get_size()[0] - 20, self.display_surface.get_size()[1] - 50
         bet_rect = bet_surf.get_rect(bottomright = (x, y))
 
+        level_surf = self.font.render("Lygis: " + str(self.player.determine_level()), True, TEXT_COLOR, None)
+        x, y = self.display_surface.get_size()[0] - 20, self.display_surface.get_size()[1] - 10
+        level_rect = level_surf.get_rect(bottomright=(x, y))
+
         if float(player_data['music_volume']) < 100:
-            volume_surf = self.bet_font.render("Volume: " + str(int(float(player_data['music_volume']))), True, TEXT_COLOR, None)
-            x, y = 175, self.display_surface.get_size()[1] - 60
+            volume_surf = self.font.render("Volume: " + str(int(float(player_data['music_volume']))), True, TEXT_COLOR, None)
+            x, y = 175, self.display_surface.get_size()[1] - 80
             volume_rect = volume_surf.get_rect(bottomright = (x, y))
         else:
-            volume_surf = self.bet_font.render("Volume: " + str(int(float(player_data['music_volume']))), True, TEXT_COLOR, None)
-            x, y = 190, self.display_surface.get_size()[1] - 60
+            volume_surf = self.font.render("Volume: " + str(int(float(player_data['music_volume']))), True, TEXT_COLOR, None)
+            x, y = 190, self.display_surface.get_size()[1] - 80
             volume_rect = volume_surf.get_rect(bottomright = (x, y))
         
         # Draw player data
         pygame.draw.rect(self.display_surface, False, balance_rect)
+        pygame.draw.rect(self.display_surface, False, free_spins_rect)
         pygame.draw.rect(self.display_surface, False, bet_rect)
+        pygame.draw.rect(self.display_surface, False, level_rect)
         pygame.draw.rect(self.display_surface, False, volume_rect)
         self.display_surface.blit(balance_surf, balance_rect)
+        self.display_surface.blit(free_spins_surf, free_spins_rect)
         self.display_surface.blit(bet_surf, bet_rect)
+        self.display_surface.blit(level_surf, level_rect)
         self.display_surface.blit(volume_surf, volume_rect)
 
         # Print last win if applicable
@@ -74,7 +86,7 @@ class UI:
             self.display_surface.blit(loss_surf, loss_rect)
 
     def update(self):
-        pygame.draw.rect(self.display_surface, 'Black', pygame.Rect(0, 900, 1600, 100))
+        pygame.draw.rect(self.display_surface, 'Black', pygame.Rect(0, 900, 1600, 200))
         self.display_info()
 
     def win(self):

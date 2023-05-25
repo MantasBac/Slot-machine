@@ -1,7 +1,7 @@
 # Display settings
 DEFAULT_IMAGE_SIZE = (300, 300)
 FPS = 120
-HEIGHT = 1000
+HEIGHT = 1020
 WIDTH = 1600
 START_X, START_Y = 0, -300
 X_OFFSET, Y_OFFSET = 20, 0
@@ -41,3 +41,4 @@ symbols = {
 
 USERS_FILE = 'users.json'
 BALANCE_FILE = 'balance.json'
+BACKUP_FILE = 'users_backup.json'
