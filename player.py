@@ -21,7 +21,7 @@ class Player():
         #login_user.root.destroy()
         
         player_data = {}
-        player_data['balance'] = "{:.2f}".format(float(self.balance))
+        player_data['balance'] = "{:.2f}".format(self.balance)
         player_data['bet_size'] = "{:.2f}".format(self.bet_size)
         player_data['last_payout'] = "{:.2f}".format(self.last_payout) if self.last_payout else "N/A"
         player_data['total_won'] = "{:.2f}".format(self.total_won)
@@ -48,3 +48,6 @@ class Player():
 
     def chage_music_volume_minus(self):
         self.music_volume -= 5
+
+    def chage_balance_minus(self, value):
+        self.balance -= value
