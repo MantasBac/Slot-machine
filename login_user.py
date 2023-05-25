@@ -6,11 +6,7 @@ import os
 from settings import *
 
 # create a file to store the registered users
-USERS_FILE = 'users.json'
 entry = False
-
-
-BALANCE_FILE = 'balance.json'
 
 # function to load users from file
 def load_users():
@@ -19,7 +15,7 @@ def load_users():
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
-    
+
 def load_balance():
     try:
         with open(BALANCE_FILE, 'r') as f:
@@ -30,7 +26,7 @@ def load_balance():
 # function to save users to file
 def save_users(users):
     with open(USERS_FILE, 'w') as f:
-        json.dump(users, f)
+        json.dump(users, f, indent=4)
 
 def save_balance(balances):
     with open(BALANCE_FILE, 'w') as f:
@@ -44,9 +40,13 @@ def login():
     global entry
     username = username_entry.get()
     password = password_entry.get()
-    if username in users and users[username][0] == password:
+    if (username == ''):
+        message_label.config(text='Username field is empty')
+    elif (password == ''):
+        message_label.config(text='Password field is empty')
+    elif username in users and users[username][0] == password:
         message_label.config(text='Login successful!')
-        
+
         #balances = users[username][1]
         balances = [username, users[username][0], users[username][1]]
         save_balance(balances)
@@ -62,11 +62,18 @@ def login():
 def signup():
     username = new_username_entry.get()
     password = new_password_entry.get()
-    users[username] = [password, '1000']
-    save_users(users)
-    signup_frame.pack_forget()
-    #signup_frame.pack(fill='both', expand=True)
-    login_frame.pack()
+    balance = balance_add_entry.get()
+    if (username == ''):
+        sign_up_message_label.config(text='Username field is empty')
+    elif (password == ''):
+        sign_up_message_label.config(text='Password field is empty')
+    elif (balance == ''):
+        sign_up_message_label.config(text='Balance field is empty')
+    else:
+        users[username] = [password, balance]
+        save_users(users)
+        signup_frame.pack_forget()
+        login_frame.pack()
 
 def enter():
     if entry == True:
@@ -119,7 +126,7 @@ login_button = tk.Button(login_frame, text='Login', command=login, bg='#292929',
 login_button.pack()
 
 # create the message label
-message_label = tk.Label(login_frame, text='', bg='#1e1e1e', fg='white', font=('Times New Roman', 18), width=18)
+message_label = tk.Label(login_frame, text='', bg='#1e1e1e', fg='white', font=('Times New Roman', 18), width=100)
 message_label.pack()
 
 # create the sign-up frame
@@ -150,6 +157,12 @@ new_password_label.pack()
 new_password_entry = tk.Entry(signup_frame, show='*', font=('Times New Roman', 18))
 new_password_entry.pack()
 
+# create the balance add label and entry
+balance_add_label = tk.Label(signup_frame, text='Balance:', bg='#1e1e1e', fg='white', font=('Times New Roman', 18), width=18, anchor='w')
+balance_add_label.pack()
+balance_add_entry = tk.Entry(signup_frame, font=('Times New Roman', 18))
+balance_add_entry.pack()
+
 # create the blank space before buttons
 space = tk.Label(signup_frame, text='', bg='#1e1e1e', font=('Times New Roman', 18), width=18, anchor='w')
 space.pack()
@@ -157,6 +170,10 @@ space.pack()
 # create the sign-up button
 signup_button = tk.Button(signup_frame, text='Sign up', command=signup, bg='#292929', fg='white', width=12, font=('Arial', 16))
 signup_button.pack()
+
+# create the message label
+sign_up_message_label = tk.Label(signup_frame, text='', bg='#1e1e1e', fg='white', font=('Times New Roman', 18), width=100)
+sign_up_message_label.pack()
 
 # create the back button
 back_button = tk.Button(signup_frame, text='Back', command=lambda: signup_frame.pack_forget() or login_frame.pack(), bg='#292929', fg='white', width=12, font=('Arial', 16))

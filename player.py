@@ -6,7 +6,7 @@ class Player():
         import json
         with open('balance.json') as json_file:
             data = json.load(json_file)
-        
+
         self.balance = float(data[2])
         self.bet_size = 10.00
         self.last_payout = 0.00

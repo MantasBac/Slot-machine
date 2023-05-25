@@ -2,10 +2,10 @@ from machine import Machine
 from ui import UI
 from player import Player
 from settings import *
-#from player import Player
 import buttons
 import ctypes, pygame, sys
 import tkinter as tk
+import json
 
 # Maintain resolution regardless of Windows scaling settings
 ctypes.windll.user32.SetProcessDPIAware()
@@ -28,6 +28,26 @@ class Game:
         pygame.mixer.music.load('audio/track.mp3')
         pygame.mixer.music.play(loops = -1)
         self.create_music_control_buttons()
+
+    def load_balance(self):
+        try:
+            with open(BALANCE_FILE, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
+    # function to load users from file
+    def load_users(self):
+        try:
+            with open(USERS_FILE, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
+    # function to save users to file
+    def save_users(self, users):
+        with open(USERS_FILE, 'w') as f:
+            json.dump(users, f, indent=4)
 
     def create_music_control_buttons(self):
         # Load the button images
@@ -61,6 +81,9 @@ class Game:
         sys.exit()
 
     def run(self):
+        users = self.load_users()
+        balance = self.load_balance()
+
         player_data = self.player.get_data()
         self.start_time = pygame.time.get_ticks()
 
@@ -85,6 +108,8 @@ class Game:
             if  button_minus5.draw(self.screen): 
                 self.machine.changebetminus()
             if button_menu.draw(self.screen):
+                users[balance[0]][1] = player_data['balance']
+                self.save_users(users)
                 self.show_menu_popup()
 
             if  button_plus55.draw(self.screen) and float(player_data['music_volume']) < 100: 

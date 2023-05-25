@@ -38,3 +38,6 @@ symbols = {
     'hourglass2': f"{SYM_PATH}/0_hourglass.png",
     'telephone': f"{SYM_PATH}/0_telephone.png"
 }
+
+USERS_FILE = 'users.json'
+BALANCE_FILE = 'balance.json'
