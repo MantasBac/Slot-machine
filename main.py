@@ -4,6 +4,7 @@ from pathlib import Path
 from machine import Machine
 from ui import UI
 from player import Player
+from menu import Menu
 from settings import *
 import buttons
 import ctypes, pygame, sys
@@ -29,10 +30,12 @@ class Game:
         self.ui = UI(self.player)
         self.delta_time = 0
 
-        # Sound
-        pygame.mixer.music.load('audio/track.mp3')
-        pygame.mixer.music.play(loops = -1)
+        self.set_music('audio/track.mp3')
         self.create_music_control_buttons()
+
+    def set_music(self, path):
+        pygame.mixer.music.load(path)
+        pygame.mixer.music.play(loops=-1)
 
     def load_balance(self):
         try:
@@ -62,14 +65,6 @@ class Game:
             if os.path.exists(BACKUP_FILE):
                 os.remove(BACKUP_FILE)
 
-            # with open(USERS_FILE, 'r') as f:
-            #     existing_data = json.load(f)
-            #
-            # existing_data.update(users)
-            #
-            # with open(USERS_FILE, 'w') as f:
-            #     json.dump(existing_data, f, indent=4)
-
         except Exception as e:
             # An error occurred, restore the backup file if it exists
             if os.path.exists(BACKUP_FILE):
@@ -96,14 +91,31 @@ class Game:
             self.music_on = True
 
     def deposit(self):
-        print('deposit')
+        popup_window = tk.Tk()
+        popup_window.title("Withdraw")
+        popup_window.geometry("1050x600")
+        popup_window.configure(bg='#1e1e1e')
+
+        def button_click():
+            print()
+
+        label_kaina = tk.Label(popup_window, text='Kaina: 300', bg='#1e1e1e', fg='white', font=('Times New Roman', 18))
+        label_kaina1 = tk.Label(popup_window, text='Kaina: 300', bg='#1e1e1e', fg='white', font=('Times New Roman', 18))
+
+        button = tk.Button(popup_window, command=button_click)
+
+        label_kaina.grid(row=0, column=0)
+        label_kaina1.grid(row=0, column=1, rowspan=3, columnspan=4, sticky=tk.E)
+        button.grid(row=2, column=1)
+
+        popup_window.mainloop()
 
     def withdraw(self):
         popup_window = tk.Tk()
         popup_window.title("Withdraw")
         popup_window.geometry("1050x300")
+        popup_window.configure(bg='#1e1e1e')
         width, height = 256, 256
-        player_data = self.player.get_data()
 
         image = Image.open("graphics/withdraw_rewards/0.jpg")  # Replace with the path to your image file
         resized_image = image.resize((width, height))
@@ -120,8 +132,6 @@ class Game:
         image3 = Image.open("graphics/withdraw_rewards/3.jpg")  # Replace with the path to your image file
         resized_image = image3.resize((width, height))
         photo3 = ImageTk.PhotoImage(resized_image)
-
-        print(float(player_data['balance']))
 
         def button_click():
             download_image(0)
@@ -163,10 +173,10 @@ class Game:
         button2 = tk.Button(popup_window, image=photo2, command=button_click2)
         button3 = tk.Button(popup_window, image=photo3, command=button_click3)
 
-        label_kaina = tk.Label(popup_window, text='Kaina: 300', font=('Times New Roman', 18))
-        label_kaina1 = tk.Label(popup_window, text='Kaina: 150', font=('Times New Roman', 18))
-        label_kaina2 = tk.Label(popup_window, text='Kaina: 50', font=('Times New Roman', 18))
-        label_kaina3 = tk.Label(popup_window, text='Kaina: 10', font=('Times New Roman', 18))
+        label_kaina = tk.Label(popup_window, text='Kaina: 300', bg='#1e1e1e', fg='white', font=('Times New Roman', 18))
+        label_kaina1 = tk.Label(popup_window, text='Kaina: 150', bg='#1e1e1e', fg='white', font=('Times New Roman', 18))
+        label_kaina2 = tk.Label(popup_window, text='Kaina: 50', bg='#1e1e1e', fg='white', font=('Times New Roman', 18))
+        label_kaina3 = tk.Label(popup_window, text='Kaina: 10', bg='#1e1e1e', fg='white', font=('Times New Roman', 18))
 
         button.grid(row=0, column=0)
         label_kaina.grid(row=1, column=0)
@@ -176,18 +186,6 @@ class Game:
         label_kaina2.grid(row=1, column=2)
         button3.grid(row=0, column=3)
         label_kaina3.grid(row=1, column=3)
-
-        popup_window.mainloop()
-
-    def show_menu_popup(self):
-        # Create the popup window
-        popup_window = tk.Tk()
-        popup_window.title("Menu")
-        popup_window.geometry("600x400")
-        #
-        # # Add some content to the window
-        label = tk.Label(popup_window, text="This is the menu popup.")
-        label.pack(pady=20)
 
         popup_window.mainloop()
 
@@ -208,8 +206,8 @@ class Game:
         img_minus55 = pygame.image.load('graphics/0/symbols/minus5.png').convert_alpha()
         button_minus55 = buttons.Button(280, 910, img_minus5, 0.1)
 
-        img_menu = pygame.image.load('graphics/0/symbols/menu.png').convert_alpha()
-        button_menu = buttons.Button(1250, 930, img_menu, 0.18)
+        img_settings = pygame.image.load('graphics/0/symbols/menu.png').convert_alpha()
+        button_settings = buttons.Button(1250, 930, img_settings, 0.18)
 
         img_deposit = pygame.image.load('graphics/0/symbols/deposit.png').convert_alpha()
         x, y = 340, self.display_surface.get_size()[1] - 90
@@ -236,8 +234,9 @@ class Game:
                 self.player.chage_music_volume_plus()
             if  button_minus55.draw(self.screen) and float(player_data['music_volume']) > 0: 
                 self.player.chage_music_volume_minus()
-            if button_menu.draw(self.screen):
-                self.show_menu_popup()
+            if button_settings.draw(self.screen):
+                menu = Menu(self.player)
+                menu.show_menu_popup()
             if button_deposit.draw(self.screen):
                 self.deposit()
             if button_withdraw.draw(self.screen):
