@@ -17,6 +17,8 @@ class Player():
         self.xp = int(data[3])
         self.level = self.determine_level()
         self.free_spins = int(data[4])
+        self.audio_track = data[5]
+        self.audio_on = data[6]
     
     def get_data(self):
         player_data = {}
@@ -29,6 +31,8 @@ class Player():
         player_data['music_volume'] = "{:.2f}".format(self.music_volume)
         player_data['xp'] = self.xp
         player_data['free_spins'] = self.free_spins
+        player_data['audio_track'] = self.audio_track
+        player_data['audio_on'] = self.audio_on
         return player_data
 
     def place_bet(self):
@@ -72,3 +76,9 @@ class Player():
 
     def subtract_free_spins(self):
         self.free_spins -= 1
+
+    def audio_track_change(self, track_path):
+        self.audio_track = track_path
+
+    def audio_on_of(self, state):
+        self.audio_on = state

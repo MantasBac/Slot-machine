@@ -2,21 +2,31 @@ import shutil
 import subprocess
 import tkinter as tk
 from pathlib import Path
-
+from tkinter import ttk
 import pygame
 from PIL import ImageTk, Image
+import tkinter.font as tkfont
 
 class Menu:
     def __init__(self, player):
         self.player = player
         self.popup_window = tk.Tk()
 
+        style = ttk.Style(self.popup_window)
+        style.theme_create('combobox_black_background', parent='alt',
+                           settings={'TCombobox': {'configure': {'fieldbackground': '#1e1e1e',
+                                                                 'background': 'white',
+                                                                 'foreground': 'white',
+                                                                 'font': ('Times New Roman', 18)}}})
+
+        style.theme_use('combobox_black_background')
+
     def show_menu_popup(self):
         # Create the popup window
         for widget in self.popup_window.winfo_children():
             widget.destroy()
         self.popup_window.title("Menu")
-        self.popup_window.geometry("1048x600")
+        self.popup_window.geometry("1048x524")
         self.popup_window.configure(bg='#1e1e1e')
         width, height = 256, 256
 
@@ -24,13 +34,13 @@ class Menu:
         resized_image = image_settings.resize((width, height))
         photo_settings = ImageTk.PhotoImage(resized_image)
 
-        image_info = Image.open("graphics/0/symbols/info.png")
-        resized_image = image_info.resize((width, height))
-        photo_info = ImageTk.PhotoImage(resized_image)
-
         image_help = Image.open("graphics/0/symbols/help.png")
         resized_image = image_help.resize((width, height))
         photo_help = ImageTk.PhotoImage(resized_image)
+
+        image_info = Image.open("graphics/0/symbols/info.png")
+        resized_image = image_info.resize((width, height))
+        photo_info = ImageTk.PhotoImage(resized_image)
 
         image_deposit = Image.open("graphics/0/symbols/deposit.png")
         resized_image = image_deposit.resize((width, height))
@@ -40,17 +50,30 @@ class Menu:
         resized_image = image_withdraw.resize((width, height))
         photo_withdraw = ImageTk.PhotoImage(resized_image)
 
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
+
         button_settings = tk.Button(self.popup_window, image=photo_settings, bg='#1e1e1e', command=self.show_settings)
-        button_info = tk.Button(self.popup_window, image=photo_info, bg='#1e1e1e', command=self.show_info)
         button_help = tk.Button(self.popup_window, image=photo_help, bg='#1e1e1e', command=self.show_help)
+        button_info = tk.Button(self.popup_window, image=photo_info, bg='#1e1e1e', command=self.show_info)
         button_deposit = tk.Button(self.popup_window, image=photo_deposit, bg='#1e1e1e', command=self.show_deposit)
         button_withdraw = tk.Button(self.popup_window, image=photo_withdraw, bg='#1e1e1e', command=self.show_withdraw)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('menu'))
+
+        self.popup_window.columnconfigure(0, weight=0)
 
         button_settings.grid(row=0, column=0)
-        button_info.grid(row=0, column=1)
-        button_help.grid(row=0, column=2)
+        button_help.grid(row=0, column=1)
+        button_info.grid(row=0, column=2)
         button_deposit.grid(row=1, column=0)
         button_withdraw.grid(row=1, column=1)
+
+        button_sound.place(relx=1, rely=1, anchor="se")
 
         self.popup_window.mainloop()
 
@@ -65,14 +88,55 @@ class Menu:
         resized_image = image_back.resize((32, 32))
         photo_back = ImageTk.PhotoImage(resized_image)
 
-        button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_menu_popup)
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
 
-        button_back.grid(row=1, column=0, sticky=tk.W)
+        selected_track = tk.StringVar()
+        def track_selection(event):
+            selected_value = selected_track.get()
+            if selected_value == "Theme #1":
+                music = "audio/track1.mp3"
+            elif selected_value == "Theme #2":
+                music = "audio/track2.mp3"
+            elif selected_value == "Theme #3":
+                music = "audio/track3.mp3"
+            self.set_music(music, self.player.audio_on)
+            self.show_settings()
+
+        button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_menu_popup)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('settings'))
+
+        if self.player.audio_track == "audio/track1.mp3":
+            self.current = 0
+        if self.player.audio_track == "audio/track2.mp3":
+            self.current = 1
+        if self.player.audio_track == "audio/track3.mp3":
+            self.current = 2
+
+        dropdown = ttk.Combobox(self.popup_window, textvariable=selected_track)
+        dropdown["values"] = ("Theme #1", "Theme #2", "Theme #3")
+        dropdown.current(self.current)
+        dropdown.bind("<<ComboboxSelected>>", track_selection)
+        font = tkfont.Font(family='Times New Roman', size=18)
+        dropdown.configure(font=font)
+
+        label_sound_track = tk.Label(self.popup_window, text="Selected track: ", bg='#1e1e1e', fg='white',
+                              font=('Times New Roman', 18))
+
+        self.popup_window.columnconfigure(0, weight=0)
+
+        button_back.grid(row=0, column=0, sticky=tk.W)
+        label_sound_track.grid(row=1, column=0)
+        dropdown.grid(row=1, column=1)
+
+        button_sound.place(relx=1, rely=1, anchor="se")
 
         self.popup_window.mainloop()
-
-    def show_deposit(self):
-        print('deposit')
 
     def show_help(self):
         for widget in self.popup_window.winfo_children():
@@ -82,14 +146,24 @@ class Menu:
         resized_image = image_back.resize((32, 32))
         photo_back = ImageTk.PhotoImage(resized_image)
 
-        button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_menu_popup)
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
 
-        button_back.grid(row=1, column=0, sticky=tk.W)
+        button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_menu_popup)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('help'))
+
+        self.popup_window.columnconfigure(0, weight=0)
+
+        button_back.grid(row=0, column=0, sticky=tk.W)
+
+        button_sound.place(relx=1, rely=1, anchor="se")
 
         self.popup_window.mainloop()
-
-    def show_withdraw(self):
-        print('withdraw')
 
     def show_info(self):
         for widget in self.popup_window.winfo_children():
@@ -118,11 +192,20 @@ class Menu:
         resized_image = image_dev4.resize((width, height))
         photo_dev4 = ImageTk.PhotoImage(resized_image)
 
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
+
         button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_menu_popup)
         button_dev1 = tk.Button(self.popup_window, image=photo_dev1, bg='#1e1e1e', command=self.show_dev1)
         button_dev2 = tk.Button(self.popup_window, image=photo_dev2, bg='#1e1e1e', command=self.show_dev2)
         button_dev3 = tk.Button(self.popup_window, image=photo_dev3, bg='#1e1e1e', command=self.show_dev3)
         button_dev4 = tk.Button(self.popup_window, image=photo_dev4, bg='#1e1e1e', command=self.show_dev4)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('info'))
 
         label_info = tk.Label(self.popup_window, text='Informacija apie kūrėjus', bg='#1e1e1e', fg='white',
                               font=('Times New Roman', 32), pady=10)
@@ -135,16 +218,20 @@ class Menu:
         label_dev4 = tk.Label(self.popup_window, text='Mantas Bačinskas', bg='#1e1e1e', fg='white',
                              font=('Times New Roman', 18))
 
-        button_back.grid(row=1, column=0, sticky=tk.W)
-        label_info.grid(row=2, column=0, columnspan=4)
-        button_dev1.grid(row=3, column=0)
-        button_dev2.grid(row=3, column=1)
-        button_dev3.grid(row=3, column=2)
-        button_dev4.grid(row=3, column=3)
-        label_dev1.grid(row=4, column=0)
-        label_dev2.grid(row=4, column=1)
-        label_dev3.grid(row=4, column=2)
-        label_dev4.grid(row=4, column=3)
+        self.popup_window.columnconfigure(0, weight=0)
+
+        button_back.grid(row=0, column=0, sticky=tk.W)
+        label_info.grid(row=1, column=0, columnspan=4)
+        button_dev1.grid(row=2, column=0)
+        button_dev2.grid(row=2, column=1)
+        button_dev3.grid(row=2, column=2)
+        button_dev4.grid(row=2, column=3)
+        label_dev1.grid(row=3, column=0)
+        label_dev2.grid(row=3, column=1)
+        label_dev3.grid(row=3, column=2)
+        label_dev4.grid(row=3, column=3)
+
+        button_sound.place(relx=1, rely=1, anchor="se")
 
         self.popup_window.mainloop()
 
@@ -152,7 +239,7 @@ class Menu:
         for widget in self.popup_window.winfo_children():
             widget.destroy()
 
-        self.set_music('audio/sr.mp3')
+        self.set_dev_music('audio/sr.mp3', self.player.audio_on)
 
         self.popup_window.title("Simonas Radžius")
         width, height = 256, 256
@@ -165,7 +252,17 @@ class Menu:
         resized_image = image_dev.resize((width, height))
         photo_dev = ImageTk.PhotoImage(resized_image)
 
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
+
         button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_info)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('dev1'))
+
         label_img_dev = tk.Label(self.popup_window, image=photo_dev, bg='#1e1e1e')
         label_dev = tk.Label(self.popup_window, text='Simonas Radžius', bg='#1e1e1e', fg='white',
                              font=('Times New Roman', 20))
@@ -175,15 +272,15 @@ class Menu:
         label_prof = tk.Label(self.popup_window, text='Profesija: Beisbolkių baryga', bg='#1e1e1e', fg='white',
                              font=('Times New Roman', 18))
 
-        button_back.grid(row=1, column=0, sticky=tk.W)
-        label_img_dev.grid(row=2, column=0, columnspan=4)
-        label_dev.grid(row=3, column=0, columnspan=4)
-        label_empty.grid(row=4, column=0, columnspan=2)
-        label_prof.grid(row=6, column=0, sticky=tk.W)
-
-
-
         self.popup_window.columnconfigure(0, weight=1)
+
+        button_back.grid(row=0, column=0, sticky=tk.W)
+        label_img_dev.grid(row=1, column=0, columnspan=4)
+        label_dev.grid(row=2, column=0, columnspan=4)
+        label_empty.grid(row=3, column=0, columnspan=2)
+        label_prof.grid(row=5, column=0, sticky=tk.W)
+
+        button_sound.place(relx=1, rely=1, anchor="se")
 
         self.popup_window.mainloop()
 
@@ -191,7 +288,7 @@ class Menu:
         for widget in self.popup_window.winfo_children():
             widget.destroy()
 
-        self.set_music('audio/ap.mp3')
+        self.set_dev_music('audio/ap.mp3', self.player.audio_on)
 
         self.popup_window.title("Arnas Pilius")
         width, height = 256, 256
@@ -204,7 +301,17 @@ class Menu:
         resized_image = image_dev.resize((width, height))
         photo_dev = ImageTk.PhotoImage(resized_image)
 
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
+
         button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_info)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('dev2'))
+
         label_img_dev = tk.Label(self.popup_window, image=photo_dev, bg='#1e1e1e')
         label_dev = tk.Label(self.popup_window, text='Arnas Pilius', bg='#1e1e1e', fg='white',
                              font=('Times New Roman', 20))
@@ -214,13 +321,15 @@ class Menu:
         label_prof = tk.Label(self.popup_window, text='Profesija: Gariūnų viršininkas', bg='#1e1e1e', fg='white',
                               font=('Times New Roman', 18))
 
-        button_back.grid(row=1, column=0, sticky=tk.W)
-        label_img_dev.grid(row=2, column=0, columnspan=4)
-        label_dev.grid(row=3, column=0, columnspan=4)
-        label_empty.grid(row=4, column=0, columnspan=2)
-        label_prof.grid(row=6, column=0, sticky=tk.W)
-
         self.popup_window.columnconfigure(0, weight=1)
+
+        button_back.grid(row=0, column=0, sticky=tk.W)
+        label_img_dev.grid(row=1, column=0, columnspan=4)
+        label_dev.grid(row=2, column=0, columnspan=4)
+        label_empty.grid(row=3, column=0, columnspan=2)
+        label_prof.grid(row=5, column=0, sticky=tk.W)
+
+        button_sound.place(relx=1, rely=1, anchor="se")
 
         self.popup_window.mainloop()
 
@@ -228,7 +337,7 @@ class Menu:
         for widget in self.popup_window.winfo_children():
             widget.destroy()
 
-        self.set_music('audio/gb.mp3')
+        self.set_dev_music('audio/gb.mp3', self.player.audio_on)
 
         self.popup_window.title("Gytis Baltrušaitis")
         width, height = 256, 256
@@ -241,7 +350,17 @@ class Menu:
         resized_image = image_dev.resize((width, height))
         photo_dev = ImageTk.PhotoImage(resized_image)
 
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
+
         button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_info)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('dev3'))
+
         label_img_dev = tk.Label(self.popup_window, image=photo_dev, bg='#1e1e1e')
         label_dev = tk.Label(self.popup_window, text='Gytis Baltrušaitis', bg='#1e1e1e', fg='white',
                              font=('Times New Roman', 20))
@@ -251,13 +370,15 @@ class Menu:
         label_prof = tk.Label(self.popup_window, text='Profesija: Top G', bg='#1e1e1e', fg='white',
                               font=('Times New Roman', 18))
 
-        button_back.grid(row=1, column=0, sticky=tk.W)
-        label_img_dev.grid(row=2, column=0, columnspan=4)
-        label_dev.grid(row=3, column=0, columnspan=4)
-        label_empty.grid(row=4, column=0, columnspan=2)
-        label_prof.grid(row=6, column=0, sticky=tk.W)
-
         self.popup_window.columnconfigure(0, weight=1)
+
+        button_back.grid(row=0, column=0, sticky=tk.W)
+        label_img_dev.grid(row=1, column=0, columnspan=4)
+        label_dev.grid(row=2, column=0, columnspan=4)
+        label_empty.grid(row=3, column=0, columnspan=2)
+        label_prof.grid(row=5, column=0, sticky=tk.W)
+
+        button_sound.place(relx=1, rely=1, anchor="se")
 
         self.popup_window.mainloop()
 
@@ -265,7 +386,7 @@ class Menu:
         for widget in self.popup_window.winfo_children():
             widget.destroy()
 
-        self.set_music('audio/mb.mp3')
+        self.set_dev_music('audio/mb.mp3', self.player.audio_on)
 
         self.popup_window.title("Mantas Bačinskas")
         width, height = 256, 256
@@ -278,7 +399,17 @@ class Menu:
         resized_image = image_dev.resize((width, height))
         photo_dev = ImageTk.PhotoImage(resized_image)
 
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
+
         button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_info)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('dev4'))
+
         label_img_dev = tk.Label(self.popup_window, image=photo_dev, bg='#1e1e1e')
         label_dev = tk.Label(self.popup_window, text='Mantas Bačinskas', bg='#1e1e1e', fg='white',
                              font=('Times New Roman', 20))
@@ -288,15 +419,20 @@ class Menu:
         label_prof = tk.Label(self.popup_window, text='Profesija: Marozas', bg='#1e1e1e', fg='white',
                               font=('Times New Roman', 18))
 
-        button_back.grid(row=1, column=0, sticky=tk.W)
-        label_img_dev.grid(row=2, column=0, columnspan=4)
-        label_dev.grid(row=3, column=0, columnspan=4)
-        label_empty.grid(row=4, column=0, columnspan=2)
-        label_prof.grid(row=6, column=0, sticky=tk.W)
-
         self.popup_window.columnconfigure(0, weight=1)
 
+        button_back.grid(row=0, column=0, sticky=tk.W)
+        label_img_dev.grid(row=1, column=0, columnspan=4)
+        label_dev.grid(row=2, column=0, columnspan=4)
+        label_empty.grid(row=3, column=0, columnspan=2)
+        label_prof.grid(row=5, column=0, sticky=tk.W)
+
+        button_sound.place(relx=1, rely=1, anchor="se")
+
         self.popup_window.mainloop()
+
+    def show_deposit(self):
+        print('deposit')
 
     def show_withdraw(self):
         for widget in self.popup_window.winfo_children():
@@ -373,6 +509,8 @@ class Menu:
         label_kaina2 = tk.Label(self.popup_window, text='Kaina: 50', bg='#1e1e1e', fg='white', font=('Times New Roman', 18))
         label_kaina3 = tk.Label(self.popup_window, text='Kaina: 10', bg='#1e1e1e', fg='white', font=('Times New Roman', 18))
 
+        self.popup_window.columnconfigure(0, weight=0)
+
         button_back.grid(row=0, column=0, sticky=tk.W)
         button.grid(row=1, column=0)
         label_kaina.grid(row=2, column=0)
@@ -385,6 +523,55 @@ class Menu:
 
         self.popup_window.mainloop()
 
-    def set_music(self, path):
+    def set_music(self, path, state):
+        self.player.audio_track = path
         pygame.mixer.music.load(path)
         pygame.mixer.music.play(loops=-1)
+        if not state:
+            pygame.mixer.music.pause()
+
+    def set_dev_music(self, path, state):
+        pygame.mixer.music.load(path)
+        pygame.mixer.music.play(loops=-1)
+        if not state:
+            pygame.mixer.music.pause()
+
+    def change_sound(self, window):
+        if self.player.audio_on:
+            pygame.mixer.music.pause()
+            self.player.audio_on = False
+            if window == 'menu':
+                self.show_menu_popup()
+            elif window == 'settings':
+                self.show_settings()
+            elif window == 'help':
+                self.show_help()
+            elif window == 'info':
+                self.show_info()
+            elif window == 'dev1':
+                self.show_dev1()
+            elif window == 'dev2':
+                self.show_dev2()
+            elif window == 'dev3':
+                self.show_dev3()
+            elif window == 'dev4':
+                self.show_dev4()
+        else:
+            pygame.mixer.music.unpause()
+            self.player.audio_on = True
+            if window == 'menu':
+                self.show_menu_popup()
+            elif window == 'settings':
+                self.show_settings()
+            elif window == 'help':
+                self.show_help()
+            elif window == 'info':
+                self.show_info()
+            elif window == 'dev1':
+                self.show_dev1()
+            elif window == 'dev2':
+                self.show_dev2()
+            elif window == 'dev3':
+                self.show_dev3()
+            elif window == 'dev4':
+                self.show_dev4()

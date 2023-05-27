@@ -30,12 +30,31 @@ class Game:
         self.ui = UI(self.player)
         self.delta_time = 0
 
-        self.set_music('audio/track.mp3')
-        self.create_music_control_buttons()
+        self.set_music(self.player.audio_track, self.player.audio_on)
+        self.create_music_control_buttons(self.player.audio_on)
 
-    def set_music(self, path):
+    def set_music(self, path, state):
         pygame.mixer.music.load(path)
         pygame.mixer.music.play(loops=-1)
+        if not state:
+            pygame.mixer.music.pause()
+
+    def create_music_control_buttons(self, state):
+        # Load the button images
+        img_music_on = pygame.image.load('graphics/0/symbols/mun250.png').convert_alpha()
+        img_music_off = pygame.image.load('graphics/0/symbols/muf250.png').convert_alpha()
+        # Create the button widgets
+        self.button_music_on = buttons.Button(1325, 930, img_music_on, 0.2)
+        self.button_music_off = buttons.Button(1325, 930, img_music_off, 0.2)
+
+    def toggle_music(self):
+        if self.player.audio_on:
+            pygame.mixer.music.pause()
+            self.player.audio_on = False
+
+        else:
+            pygame.mixer.music.unpause()
+            self.player.audio_on = True
 
     def load_balance(self):
         try:
@@ -71,24 +90,6 @@ class Game:
                 shutil.copyfile(BACKUP_FILE, USERS_FILE)
 
             print(f"An error occurred while saving the users: {str(e)}")
-
-    def create_music_control_buttons(self):
-        # Load the button images
-        img_music_on = pygame.image.load('graphics/0/symbols/mun250.png').convert_alpha()
-        img_music_off = pygame.image.load('graphics/0/symbols/muf250.png').convert_alpha()
-        # Create the button widgets
-        self.button_music_on = buttons.Button(1325, 930, img_music_on, 0.2)
-        self.button_music_off = buttons.Button(1325, 930, img_music_off, 0.2)
-
-        self.music_on = True
-
-    def toggle_music(self):
-        if self.music_on:
-            pygame.mixer.music.pause()
-            self.music_on = False
-        else:
-            pygame.mixer.music.unpause()
-            self.music_on = True
 
     def deposit(self):
         popup_window = tk.Tk()
@@ -223,6 +224,8 @@ class Game:
             users[balance[0]][1] = player_data['balance']
             users[balance[0]][2] = player_data['xp']
             users[balance[0]][3] = player_data['free_spins']
+            users[balance[0]][4] = player_data['audio_track']
+            users[balance[0]][5] = player_data['audio_on']
             self.save_users(users)
 
 
@@ -267,7 +270,7 @@ class Game:
             self.screen.blit(self.grid_image, (0, 0))
 
             # Show the music control buttons based on the music state
-            if self.music_on:
+            if self.player.audio_on:
                 self.button_music_on.draw(self.screen)
             else:
                 self.button_music_off.draw(self.screen)
