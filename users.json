@@ -3,26 +3,26 @@
     "asdas": "asda",
     "aa": [
         "a",
-        "5000",
-        "100",
+        "5000.00",
+        100,
         0,
-        "audio/track.mp3",
+        "audio/track1.mp3",
         true
     ],
     "aaa": [
         "a",
-        "1000",
-        "100",
+        "1000.00",
+        100,
         0,
-        "audio/track.mp3",
+        "audio/track1.mp3",
         true
     ],
     "w": [
         "w",
-        "1000",
-        "100",
+        "1000.00",
+        100,
         0,
-        "audio/track.mp3",
+        "audio/track1.mp3",
         true
     ],
     "ww": [
@@ -31,6 +31,30 @@
         1000,
         9,
         "audio/track3.mp3",
+        true
+    ],
+    "ss": [
+        "s",
+        "1020.00",
+        100,
+        0,
+        "audio/track1.mp3",
+        true
+    ],
+    "blabla": [
+        "bla",
+        "69.00",
+        100,
+        0,
+        "audio/track1.mp3",
+        true
+    ],
+    "ahh": [
+        "ah",
+        "11111.00",
+        100,
+        0,
+        "audio/track1.mp3",
         true
     ]
 }
