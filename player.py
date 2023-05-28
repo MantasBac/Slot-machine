@@ -66,6 +66,9 @@ class Player():
     def chage_balance_minus(self, value):
         self.balance -= value
 
+    def change_balance_plus(self, value):
+        self.balance += value
+
     def add_xp(self, value):
         self.xp += value
         self.add_free_spins()

@@ -82,6 +82,7 @@ def enter():
         os.system('python main.py')
     else:
         print("NOPE")
+        message_label.config(text='Please log in')
 
 # create the GUI
 root = tk.Tk()
