@@ -252,7 +252,7 @@ class Game:
         img_withdraw = pygame.image.load('graphics/0/symbols/withdraw.png').convert_alpha()
         x, y = 400, self.display_surface.get_size()[1] - 90
         button_withdraw = buttons.Button(x, y, img_withdraw, 0.18)
-
+        
         while True:
             player_data = self.player.get_data()
 
@@ -288,12 +288,15 @@ class Game:
                         self.toggle_music()
                     elif self.button_music_off.rect.collidepoint(pos):
                         self.toggle_music()
-
-            # Handle quit operation
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                elif event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+            # Handle quit operation
+            # for event in pygame.event.get():
+            #     if event.type == pygame.QUIT:
+            #         pygame.quit()
+            #         sys.exit()
 
             # Time variables
             self.delta_time = (pygame.time.get_ticks() - self.start_time) / 1000

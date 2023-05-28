@@ -9,7 +9,7 @@ import json
 class Machine:
     def __init__(self, player):
         self.display_surface = pygame.display.get_surface()
-        self.machine_balance = 10000.00
+        self.machine_balance = 1000000.00
         self.reel_index = 0
         self.reel_list = {}
         self.can_toggle = True
