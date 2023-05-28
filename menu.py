@@ -52,6 +52,11 @@ class Menu:
         resized_image = image_withdraw.resize((width, height))
         photo_withdraw = ImageTk.PhotoImage(resized_image)
 
+        image_stop= Image.open("graphics/0/symbols/stop.png")
+        resized_image = image_stop.resize((width, height))
+        photo_stop = ImageTk.PhotoImage(resized_image)
+
+
         if self.player.audio_on:
             self.image_sound = Image.open('graphics/0/symbols/mun250.png')
         else:
@@ -63,6 +68,10 @@ class Menu:
         resized_image = image_admin.resize((width, height))
         photo_admin = ImageTk.PhotoImage(resized_image)
 
+        image_stop = Image.open("graphics/0/symbols/stop.png")
+        resized_image = image_stop.resize((width, height))
+        photo_stop = ImageTk.PhotoImage(resized_image)
+
         button_settings = tk.Button(self.popup_window, image=photo_settings, bg='#1e1e1e', command=self.show_settings)
         button_help = tk.Button(self.popup_window, image=photo_help, bg='#1e1e1e', command=self.show_help)
         button_info = tk.Button(self.popup_window, image=photo_info, bg='#1e1e1e', command=self.show_info)
@@ -71,6 +80,7 @@ class Menu:
         button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
                                  command=lambda: self.change_sound('menu'))
         button_admin = tk.Button(self.popup_window, image=photo_admin, bg='#1e1e1e', command=self.show_admin)
+        button_stop = tk.Button(self.popup_window, image=photo_stop, bg='#1e1e1e', command=self.delete_user)
 
         self.popup_window.columnconfigure(0, weight=0)
 
@@ -79,11 +89,39 @@ class Menu:
         button_info.grid(row=0, column=2)
         button_deposit.grid(row=1, column=0)
         button_withdraw.grid(row=1, column=1)
+        button_stop.grid(row=1, column=2)
 
         if self.player.admin:
             button_admin.grid(row=1, column=2)
 
         button_sound.place(relx=1, rely=1, anchor="se")
+
+        self.popup_window.mainloop()
+
+
+    def block_user(self, acc):
+        if str(self.data.load_balance[0]) ==acc:
+            self.player.banned = True
+            self.data.save()
+
+    def delete_user(self):
+        for widget in self.popup_window.winfo_children():
+            widget.destroy()
+
+        image_back = Image.open("graphics/0/symbols/back.png")
+        resized_image = image_back.resize((32, 32))
+        photo_back = ImageTk.PhotoImage(resized_image)
+
+        username_label = tk.Label(self.popup_window, text='Username: ', bg='#1e1e1e', fg='white', font=('Times New Roman', 18), width=18, anchor='w')
+        button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_menu_popup)
+        button_delete = tk.Button(self.popup_window, text='Delete', bg='#1e1e1e', fg='white', command= lambda: self.block_user(username_entry), font=('Times New Roman', 18))
+        username_entry = tk.Entry(self.popup_window, font=('Times New Roman', 18))
+
+
+        button_back.grid(row=0, column=0, sticky='W')
+        username_label.grid(row=1, column=0)
+        username_entry.grid(row=1, column=1)
+        button_delete.grid(row=1, column=2)
 
         self.popup_window.mainloop()
 

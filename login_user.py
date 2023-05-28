@@ -71,7 +71,7 @@ def signup():
     elif (balance == ''):
         sign_up_message_label.config(text='Balance field is empty')
     else:
-        users[username] = [password, balance, 100, 0, 'audio/track1.mp3', True]
+        users[username] = [password, balance, 100, 0, 'audio/track1.mp3', True, False, False]
         save_users(users)
         signup_frame.pack_forget()
         login_frame.pack()

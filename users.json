@@ -1,7 +1,7 @@
 {
     "admin": [
         "admin",
-        "5000.00",
+        5000.0,
         100,
         0,
         "audio/track1.mp3",
@@ -31,13 +31,13 @@
     ],
     "w": [
         "w",
-        "1000.00",
+        1000.0,
         100,
         0,
         "audio/track1.mp3",
-        true,
         false,
-        true
+        false,
+        false
     ],
     "ww": [
         "w",

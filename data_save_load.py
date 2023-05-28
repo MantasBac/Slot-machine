@@ -50,4 +50,5 @@ class Data:
         users[balance[0]][3] = self.player.free_spins
         users[balance[0]][4] = self.player.audio_track
         users[balance[0]][5] = self.player.audio_on
+        users[balance[0]][7] = self.player.banned
         self.save_users(users)
