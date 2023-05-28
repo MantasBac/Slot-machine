@@ -52,11 +52,6 @@ class Menu:
         resized_image = image_withdraw.resize((width, height))
         photo_withdraw = ImageTk.PhotoImage(resized_image)
 
-        image_stop= Image.open("graphics/0/symbols/stop.png")
-        resized_image = image_stop.resize((width, height))
-        photo_stop = ImageTk.PhotoImage(resized_image)
-
-
         if self.player.audio_on:
             self.image_sound = Image.open('graphics/0/symbols/mun250.png')
         else:
@@ -89,7 +84,9 @@ class Menu:
         button_info.grid(row=0, column=2)
         button_deposit.grid(row=1, column=0)
         button_withdraw.grid(row=1, column=1)
-        button_stop.grid(row=1, column=2)
+
+        if not self.player.admin:
+            button_stop.grid(row=1, column=2)
 
         if self.player.admin:
             button_admin.grid(row=1, column=2)
@@ -98,9 +95,11 @@ class Menu:
 
         self.popup_window.mainloop()
 
-
     def block_user(self, acc):
-        if str(self.data.load_balance[0]) ==acc:
+        balance = self.data.load_balance()
+        print('deletinu')
+        print(balance[0])
+        if balance[0] == acc:
             self.player.banned = True
             self.data.save()
 
@@ -114,14 +113,13 @@ class Menu:
 
         username_label = tk.Label(self.popup_window, text='Username: ', bg='#1e1e1e', fg='white', font=('Times New Roman', 18), width=18, anchor='w')
         button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_menu_popup)
-        button_delete = tk.Button(self.popup_window, text='Delete', bg='#1e1e1e', fg='white', command= lambda: self.block_user(username_entry), font=('Times New Roman', 18))
+        button_delete = tk.Button(self.popup_window, text='Delete', bg='#1e1e1e', fg='white', command= lambda: self.block_user(username_entry.get()), font=('Times New Roman', 18))
         username_entry = tk.Entry(self.popup_window, font=('Times New Roman', 18))
 
-
         button_back.grid(row=0, column=0, sticky='W')
-        username_label.grid(row=1, column=0)
-        username_entry.grid(row=1, column=1)
-        button_delete.grid(row=1, column=2)
+        username_label.grid(row=1, column=0, sticky='W')
+        username_entry.grid(row=1, column=1, sticky='W')
+        button_delete.grid(row=1, column=2, sticky='E')
 
         self.popup_window.mainloop()
 

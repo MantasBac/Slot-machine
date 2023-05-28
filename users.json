@@ -37,7 +37,7 @@
         "audio/track1.mp3",
         false,
         false,
-        false
+        true
     ],
     "ww": [
         "w",
