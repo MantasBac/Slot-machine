@@ -126,6 +126,16 @@ class Machine:
         spin_payout = 0
         for v in win_data.values():
             multiplier += len(v[1])
+            if len(v[0]) == 9:
+                multiplier=multiplier*0.9
+            elif len(v[0]) == 6:
+                multiplier=multiplier*0.8
+            elif len(v[0]) == 7:
+                multiplier=multiplier*0.7
+            elif len(v[0]) == 8:
+                multiplier=multiplier*0.6
+            else:
+                multiplier=multiplier*0.5
         spin_payout = (multiplier * curr_player.bet_size)
         curr_player.balance += spin_payout
         self.machine_balance -= spin_payout
