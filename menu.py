@@ -432,7 +432,59 @@ class Menu:
         self.popup_window.mainloop()
 
     def show_deposit(self):
-        print('deposit')
+        popup_window = tk.Tk()
+        popup_window.title("Deposit")
+        popup_window.geometry("1050x600")
+        popup_window.configure(bg='#1e1e1e')
+
+        def validate_card():
+            card_number = card_entry.get()
+            expiration_date = date_entry.get()
+            cv_number = cv_entry.get()
+            deposit_amount = deposit_entry.get()
+
+            if card_number.strip() == "" or expiration_date.strip() == "" or cv_number.strip() == "" or deposit_amount.strip() == "":
+                message_label.config(text='Please fill in all the fields!')
+            elif not card_number.isdigit() or not expiration_date.isdigit() or not cv_number.isdigit() or not deposit_amount.isdigit():
+                message_label.config(text='Please enter numbers only!')
+            elif len(card_number) != 16 or len(expiration_date) != 4 or len(cv_number) != 3:
+                message_label.config(text='Invalid card information!')
+            else:
+                message_label.config(text='Success, card information is valid!')
+                self.player.change_balance_plus(float(deposit_amount))
+                popup_window.after(1500, popup_window.destroy)
+
+        card_label = tk.Label(popup_window, text="Card Number:", bg='#1e1e1e', fg='white', font=('Times New Roman', 20))
+        card_label.place(x=100, y=50)
+        card_entry = tk.Entry(popup_window, font=('Times New Roman', 20))
+        card_entry.place(x=100, y=100)
+
+        # Create a label and entry for expiration date
+        date_label = tk.Label(popup_window, text="Expiration Date (MMYY):", bg='#1e1e1e', fg='white', font=('Times New Roman', 20))
+        date_label.place(x=600, y=50)
+        date_entry = tk.Entry(popup_window, font=('Times New Roman', 20))
+        date_entry.place(x=600, y=100)
+
+        # Create a label and entry for CV number
+        cv_label = tk.Label(popup_window, text="CV Number:", bg='#1e1e1e', fg='white', font=('Times New Roman', 20))
+        cv_label.place(x=100, y=200)
+        cv_entry = tk.Entry(popup_window, font=('Times New Roman', 20))
+        cv_entry.place(x=100, y=250)
+
+        # Create a label and entry for deposit amount
+        deposit_label = tk.Label(popup_window, text="Deposit Amount (in euros):", bg='#1e1e1e', fg='white', font=('Times New Roman', 20))
+        deposit_label.place(x=100, y=400)
+        deposit_entry = tk.Entry(popup_window, font=('Times New Roman', 20))
+        deposit_entry.place(x=100, y=450)
+
+        # Create a button to validate the card information and deposit amount
+        validate_button = tk.Button(popup_window, text="Confirm deposit", bg='#1e1e1e', fg='white', font=('Times New Roman', 20), command=validate_card)
+        validate_button.place(x=600, y=435)
+
+        message_label = tk.Label(popup_window, text='', bg='#1e1e1e', fg='white', font=('Times New Roman', 20))
+        message_label.place(x=600, y=250)
+
+        popup_window.mainloop()
 
     def show_withdraw(self):
         for widget in self.popup_window.winfo_children():
