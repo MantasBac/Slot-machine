@@ -48,7 +48,8 @@ def login():
         message_label.config(text='Login successful!')
 
         #balances = users[username][1]
-        balances = [username, users[username][0], users[username][1], users[username][2], users[username][3], users[username][4], users[username][5]]
+        balances = [username, users[username][0], users[username][1], users[username][2], users[username][3],
+                    users[username][4], users[username][5], users[username][6], users[username][7]]
         save_balance(balances)
         entry = True
         return entry

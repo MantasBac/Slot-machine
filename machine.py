@@ -2,9 +2,8 @@ from reel import *
 from settings import *
 from ui import UI
 from wins import *
-import buttons
 import pygame
-import json
+from data_save_load import Data
 
 class Machine:
     def __init__(self, player):
@@ -24,6 +23,7 @@ class Machine:
         self.spawn_reels()
         self.currPlayer = player
         self.ui = UI(self.currPlayer)
+        self.data = Data(self.currPlayer)
         
         # Import sounds
         # self.spin_sound = pygame.mixer.Sound('audio/spinclip.mp3')
@@ -71,7 +71,8 @@ class Machine:
             self.machine_balance += self.currPlayer.bet_size
             self.currPlayer.last_payout = None
             self.currPlayer.last_loss = None
-            
+
+            self.data.save()
             
     def draw_reels(self, delta_time):
         for reel in self.reel_list:
@@ -131,6 +132,8 @@ class Machine:
         self.machine_balance -= spin_payout
         curr_player.last_payout = spin_payout
         curr_player.total_won += spin_payout
+
+        self.data.save()
 
     # You need to provide sounds and load them in the Machine init function for this to work!
     def play_win_sound(self, win_data):

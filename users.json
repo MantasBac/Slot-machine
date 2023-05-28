@@ -1,36 +1,52 @@
 {
-    "admin": "admin",
-    "asdas": "asda",
+    "admin": [
+        "admin",
+        "5000.00",
+        100,
+        0,
+        "audio/track1.mp3",
+        false,
+        true,
+        false
+    ],
     "aa": [
         "a",
         "5000",
         "100",
         0,
-        "audio/track.mp3",
-        true
+        "audio/track1.mp3",
+        true,
+        false,
+        false
     ],
     "aaa": [
         "a",
         "1000",
         "100",
         0,
-        "audio/track.mp3",
-        true
+        "audio/track1.mp3",
+        true,
+        false,
+        false
     ],
     "w": [
         "w",
         "1000",
         "100",
         0,
-        "audio/track.mp3",
+        "audio/track1.mp3",
+        true,
+        false,
         true
     ],
     "ww": [
         "w",
-        "7100.00",
-        1000,
+        7320.0,
+        1200,
         9,
         "audio/track3.mp3",
-        true
+        false,
+        true,
+        false
     ]
 }

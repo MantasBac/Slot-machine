@@ -6,11 +6,13 @@ from tkinter import ttk
 import pygame
 from PIL import ImageTk, Image
 import tkinter.font as tkfont
+from data_save_load import Data
 
 class Menu:
     def __init__(self, player):
         self.player = player
         self.popup_window = tk.Tk()
+        self.data = Data(self.player)
 
         style = ttk.Style(self.popup_window)
         style.theme_create('combobox_black_background', parent='alt',
@@ -57,6 +59,10 @@ class Menu:
         resized_image = self.image_sound.resize((50, 50))
         photo_sound = ImageTk.PhotoImage(resized_image)
 
+        image_admin = Image.open("graphics/0/symbols/ban.jpg")
+        resized_image = image_admin.resize((width, height))
+        photo_admin = ImageTk.PhotoImage(resized_image)
+
         button_settings = tk.Button(self.popup_window, image=photo_settings, bg='#1e1e1e', command=self.show_settings)
         button_help = tk.Button(self.popup_window, image=photo_help, bg='#1e1e1e', command=self.show_help)
         button_info = tk.Button(self.popup_window, image=photo_info, bg='#1e1e1e', command=self.show_info)
@@ -64,6 +70,7 @@ class Menu:
         button_withdraw = tk.Button(self.popup_window, image=photo_withdraw, bg='#1e1e1e', command=self.show_withdraw)
         button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
                                  command=lambda: self.change_sound('menu'))
+        button_admin = tk.Button(self.popup_window, image=photo_admin, bg='#1e1e1e', command=self.show_admin)
 
         self.popup_window.columnconfigure(0, weight=0)
 
@@ -72,6 +79,9 @@ class Menu:
         button_info.grid(row=0, column=2)
         button_deposit.grid(row=1, column=0)
         button_withdraw.grid(row=1, column=1)
+
+        if self.player.admin:
+            button_admin.grid(row=1, column=2)
 
         button_sound.place(relx=1, rely=1, anchor="se")
 
@@ -523,8 +533,66 @@ class Menu:
 
         self.popup_window.mainloop()
 
+    def show_admin(self):
+        for widget in self.popup_window.winfo_children():
+            widget.destroy()
+
+        image_back = Image.open("graphics/0/symbols/back.png")
+        resized_image = image_back.resize((32, 32))
+        photo_back = ImageTk.PhotoImage(resized_image)
+
+        if self.player.audio_on:
+            self.image_sound = Image.open('graphics/0/symbols/mun250.png')
+        else:
+            self.image_sound = Image.open('graphics/0/symbols/muf250.png')
+        resized_image = self.image_sound.resize((50, 50))
+        photo_sound = ImageTk.PhotoImage(resized_image)
+
+        button_back = tk.Button(self.popup_window, image=photo_back, bg='#1e1e1e', command=self.show_menu_popup)
+        button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
+                                 command=lambda: self.change_sound('admin'))
+
+        self.popup_window.columnconfigure(0, weight=0)
+
+        button_back.grid(row=0, column=0, sticky=tk.W)
+
+        users = self.data.load_users()
+        i = 0
+        for user in users:
+            if users[user][6] == False and users[user][7] == True:
+                button_user_ban = tk.Button(self.popup_window, text='UNBAN', command=lambda acc=user: self.ban(acc))
+            elif users[user][6] == False and users[user][7] == False:
+                button_user_ban = tk.Button(self.popup_window, text='BAN', command=lambda acc=user: self.ban(acc))
+            else:
+                button_user_ban = tk.Label(self.popup_window, text='ADMIN', bg='#1e1e1e', fg='white',
+                                    font=('Times New Roman', 18))
+            label_user = tk.Label(self.popup_window, text=str((i+1)) + '. ' + user + ': ', bg='#1e1e1e', fg='white',
+                                    font=('Times New Roman', 18))
+            label_user.grid(row=i+1, column=0, sticky='W')
+            button_user_ban.grid(row=i+1, column=1, sticky='E')
+            i += 1
+
+        i = 0
+        button_sound.place(relx=1, rely=1, anchor="se")
+
+        self.popup_window.mainloop()
+
+    def ban(self, user):
+        users = self.data.load_users()
+
+        if users[user][7] == True:
+            users[user][7] = False
+            print('unbanned')
+        else:
+            users[user][7] = True
+            print('banned')
+
+        self.data.save_users(users)
+        self.show_admin()
+
     def set_music(self, path, state):
         self.player.audio_track = path
+        self.data.save()
         pygame.mixer.music.load(path)
         pygame.mixer.music.play(loops=-1)
         if not state:
@@ -556,6 +624,8 @@ class Menu:
                 self.show_dev3()
             elif window == 'dev4':
                 self.show_dev4()
+            elif window == 'admin':
+                self.show_admin()
         else:
             pygame.mixer.music.unpause()
             self.player.audio_on = True
@@ -575,3 +645,5 @@ class Menu:
                 self.show_dev3()
             elif window == 'dev4':
                 self.show_dev4()
+            elif window == 'admin':
+                self.show_admin()

@@ -19,6 +19,8 @@ class Player():
         self.free_spins = int(data[4])
         self.audio_track = data[5]
         self.audio_on = data[6]
+        self.admin = data[7]
+        self.banned = data[8]
     
     def get_data(self):
         player_data = {}
@@ -33,6 +35,8 @@ class Player():
         player_data['free_spins'] = self.free_spins
         player_data['audio_track'] = self.audio_track
         player_data['audio_on'] = self.audio_on
+        player_data['admin'] = self.admin
+        player_data['banned'] = self.banned
         return player_data
 
     def place_bet(self):

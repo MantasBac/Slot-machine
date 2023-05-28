@@ -1,4 +1,3 @@
-import os
 import shutil
 from pathlib import Path
 from machine import Machine
@@ -6,11 +5,11 @@ from ui import UI
 from player import Player
 from menu import Menu
 from settings import *
+from data_save_load import Data
 import buttons
 import ctypes, pygame, sys
 import tkinter as tk
 from PIL import ImageTk, Image
-import json
 import subprocess
 
 # Maintain resolution regardless of Windows scaling settings
@@ -29,6 +28,7 @@ class Game:
         self.machine = Machine(self.player)
         self.ui = UI(self.player)
         self.delta_time = 0
+        self.data = Data(self.player)
 
         self.set_music(self.player.audio_track, self.player.audio_on)
         self.create_music_control_buttons(self.player.audio_on)
@@ -55,41 +55,6 @@ class Game:
         else:
             pygame.mixer.music.unpause()
             self.player.audio_on = True
-
-    def load_balance(self):
-        try:
-            with open(BALANCE_FILE, 'r') as f:
-                return json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
-            return {}
-
-    # function to load users from file
-    def load_users(self):
-        try:
-            with open(USERS_FILE, 'r') as f:
-                return json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
-            return {}
-
-    # function to save users to file
-    def save_users(self, users):
-        shutil.copyfile(USERS_FILE, BACKUP_FILE)
-
-        try:
-            with open(USERS_FILE + '.tmp', 'w') as f:
-                json.dump(users, f, indent=4)
-
-            os.replace(USERS_FILE + '.tmp', USERS_FILE)
-
-            if os.path.exists(BACKUP_FILE):
-                os.remove(BACKUP_FILE)
-
-        except Exception as e:
-            # An error occurred, restore the backup file if it exists
-            if os.path.exists(BACKUP_FILE):
-                shutil.copyfile(BACKUP_FILE, USERS_FILE)
-
-            print(f"An error occurred while saving the users: {str(e)}")
 
     def deposit(self):
         popup_window = tk.Tk()
@@ -190,12 +155,42 @@ class Game:
 
         popup_window.mainloop()
 
+    def acc_banned(self):
+        popup_window = tk.Tk()
+        popup_window.title("Withdraw")
+        popup_window.geometry("650x220")
+        popup_window.configure(bg='#1e1e1e')
+        width, height = 256, 211
+
+        def disable_close():
+            pass
+
+        popup_window.protocol("WM_DELETE_WINDOW", disable_close)
+
+        image_banned = Image.open("graphics/0/symbols/skull.png")
+        resized_image = image_banned.resize((width, height))
+        photo_banned = ImageTk.PhotoImage(resized_image)
+
+        label_banned = tk.Label(popup_window, text='Your account has been banned', bg='#1e1e1e', fg='white',
+                               font=('Times New Roman', 24))
+        label_img_banned = tk.Label(popup_window, image=photo_banned, bg='#1e1e1e')
+
+        label_banned.grid(row=0, column=0)
+        label_img_banned.grid(row=0, column=1)
+
+        popup_window.mainloop()
+
     def run(self):
-        users = self.load_users()
-        balance = self.load_balance()
+        users = self.data.load_users()
+        balance = self.data.load_balance()
 
         self.start_time = pygame.time.get_ticks()
         self.display_surface = pygame.display.get_surface()
+
+        if self.player.banned == True:
+            pygame.mixer.music.load('audio/banned.mp3')
+            pygame.mixer.music.play(1)
+            self.acc_banned()
 
         img_plus5 = pygame.image.load('graphics/0/symbols/plus5.png').convert_alpha()
         button_plus5 = buttons.Button(1500, 910, img_plus5, 0.1)
@@ -221,14 +216,6 @@ class Game:
         while True:
             player_data = self.player.get_data()
 
-            users[balance[0]][1] = player_data['balance']
-            users[balance[0]][2] = player_data['xp']
-            users[balance[0]][3] = player_data['free_spins']
-            users[balance[0]][4] = player_data['audio_track']
-            users[balance[0]][5] = player_data['audio_on']
-            self.save_users(users)
-
-
             if  button_plus5.draw(self.screen): 
                 self.machine.changebetplus()
             if  button_minus5.draw(self.screen): 
@@ -251,12 +238,15 @@ class Game:
                     pos = pygame.mouse.get_pos()
                     if self.button_music_on.rect.collidepoint(pos):
                         self.toggle_music()
+                        self.data.save()
                     elif self.button_music_off.rect.collidepoint(pos):
                         self.toggle_music()
+                        self.data.save()
 
             # Handle quit operation
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    self.data.save()
                     pygame.quit()
                     sys.exit()
 
