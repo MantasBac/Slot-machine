@@ -1,5 +1,6 @@
 import shutil
 import subprocess
+import sys
 import tkinter as tk
 from pathlib import Path
 from tkinter import ttk
@@ -102,6 +103,8 @@ class Menu:
         if balance[0] == acc:
             self.player.banned = True
             self.data.save()
+            pygame.quit()
+            sys.exit()
 
     def delete_user(self):
         for widget in self.popup_window.winfo_children():

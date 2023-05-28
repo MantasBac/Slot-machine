@@ -193,12 +193,16 @@ class Game:
     def acc_banned(self):
         popup_window = tk.Tk()
         popup_window.title("Withdraw")
-        popup_window.geometry("650x220")
+        popup_window.geometry("690x260")
         popup_window.configure(bg='#1e1e1e')
         width, height = 256, 211
 
         def disable_close():
             pass
+
+        def button_exit():
+            pygame.quit()
+            sys.exit()
 
         popup_window.protocol("WM_DELETE_WINDOW", disable_close)
 
@@ -210,8 +214,12 @@ class Game:
                                font=('Times New Roman', 24))
         label_img_banned = tk.Label(popup_window, image=photo_banned, bg='#1e1e1e')
 
+        button_exit = tk.Button(popup_window, text='EXIT', command=button_exit, font=('Times New Roman', 20))
+
         label_banned.grid(row=0, column=0)
         label_img_banned.grid(row=0, column=1)
+
+        button_exit.place(relx=1, rely=1, anchor="se")
 
         popup_window.mainloop()
 
@@ -277,19 +285,10 @@ class Game:
                     elif self.button_music_off.rect.collidepoint(pos):
                         self.toggle_music()
                         self.data.save()
-
-            # Handle quit operation
-            for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.data.save()
                     pygame.quit()
                     sys.exit()
-
-            # Handle quit operation
-            # for event in pygame.event.get():
-            #     if event.type == pygame.QUIT:
-            #         pygame.quit()
-            #         sys.exit()
 
             # Time variables
             self.delta_time = (pygame.time.get_ticks() - self.start_time) / 1000
