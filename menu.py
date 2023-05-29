@@ -131,6 +131,7 @@ class Menu:
             widget.destroy()
 
         self.popup_window.title("Settings")
+        self.popup_window.geometry("1048x524")
         width, height = 256, 256
 
         image_back = Image.open("graphics/0/symbols/back.png")
@@ -191,9 +192,29 @@ class Menu:
         for widget in self.popup_window.winfo_children():
             widget.destroy()
 
+        self.popup_window.title("Help")
+        self.popup_window.geometry("1048x764")
+        width, height = 32, 32
+
         image_back = Image.open("graphics/0/symbols/back.png")
         resized_image = image_back.resize((32, 32))
         photo_back = ImageTk.PhotoImage(resized_image)
+
+        image_green = Image.open("graphics/0/symbols/0_diamond.png")
+        resized_image = image_green.resize((width, height))
+        photo_green = ImageTk.PhotoImage(resized_image)
+
+        image_purple = Image.open("graphics/0/symbols/0_floppy.png")
+        resized_image = image_purple.resize((width, height))
+        photo_purple = ImageTk.PhotoImage(resized_image)
+
+        image_red = Image.open("graphics/0/symbols/0_hourglass.png")
+        resized_image = image_red.resize((width, height))
+        photo_red = ImageTk.PhotoImage(resized_image)
+
+        image_pink = Image.open("graphics/0/symbols/0_telephone.png")
+        resized_image = image_pink.resize((width, height))
+        photo_pink = ImageTk.PhotoImage(resized_image)
 
         if self.player.audio_on:
             self.image_sound = Image.open('graphics/0/symbols/mun250.png')
@@ -206,9 +227,165 @@ class Menu:
         button_sound = tk.Button(self.popup_window, image=photo_sound, bg='#1e1e1e',
                                  command=lambda: self.change_sound('help'))
 
+        label_green = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green1 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green2 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green_3 = tk.Label(self.popup_window, text='  -  27 (x2.7)', bg='#1e1e1e', fg='white',
+                               font=('Times New Roman', 24), pady=10)
+
+        label_green3 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green4 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green5 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green6 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green_4 = tk.Label(self.popup_window, text='  -  36 (x3.6)', bg='#1e1e1e', fg='#66fa66',
+                                 font=('Times New Roman', 24), pady=10)
+
+        label_green7 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green8 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green9 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green10 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green11 = tk.Label(self.popup_window, image=photo_green, bg='#1e1e1e')
+        label_green_5 = tk.Label(self.popup_window, text='  -  45 (x4.5)', bg='#1e1e1e', fg='#13fa02',
+                                 font=('Times New Roman', 24), pady=10)
+
+        label_purple = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple1 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple2 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple_3 = tk.Label(self.popup_window, text='  -  18 (x1.8)', bg='#1e1e1e', fg='white',
+                               font=('Times New Roman', 24), pady=10)
+
+        label_purple3 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple4 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple5 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple6 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple_4 = tk.Label(self.popup_window, text='  -  24 (x2.4)', bg='#1e1e1e', fg='#5f4187',
+                                 font=('Times New Roman', 24), pady=10)
+
+        label_purple7 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple8 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple9 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple10 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple11 = tk.Label(self.popup_window, image=photo_purple, bg='#1e1e1e')
+        label_purple_5 = tk.Label(self.popup_window, text='  -  30 (x3.0)', bg='#1e1e1e', fg='#4e02c9',
+                                  font=('Times New Roman', 24), pady=10)
+
+        label_red = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red1 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red2 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red_3 = tk.Label(self.popup_window, text='  -  15 (x1.5)', bg='#1e1e1e', fg='white',
+                               font=('Times New Roman', 24), pady=10)
+
+        label_red3 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red4 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red5 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red6 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red_4 = tk.Label(self.popup_window, text='  -  20 (x2.0)', bg='#1e1e1e', fg='#874144',
+                              font=('Times New Roman', 24), pady=10)
+
+        label_red7 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red8 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red9 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red10 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red11 = tk.Label(self.popup_window, image=photo_red, bg='#1e1e1e')
+        label_red_5 = tk.Label(self.popup_window, text='  -  25 (x2.5)', bg='#1e1e1e', fg='#ed0202',
+                                  font=('Times New Roman', 24), pady=10)
+
+        label_pink = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink1 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink2 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink_3 = tk.Label(self.popup_window, text='  -  15 (x1.5)', bg='#1e1e1e', fg='white',
+                                  font=('Times New Roman', 24), pady=10)
+
+        label_pink3 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink4 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink5 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink6 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink_4 = tk.Label(self.popup_window, text='  -  20 (x2.0)', bg='#1e1e1e', fg='#874184',
+                                font=('Times New Roman', 24), pady=10)
+
+        label_pink7 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink8 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink9 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink10 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink11 = tk.Label(self.popup_window, image=photo_pink, bg='#1e1e1e')
+        label_pink_5 = tk.Label(self.popup_window, text='  -  25 (x2.5)', bg='#1e1e1e', fg='#ed02be',
+                                font=('Times New Roman', 24), pady=10)
+
         self.popup_window.columnconfigure(0, weight=0)
 
         button_back.grid(row=0, column=0, sticky=tk.W)
+
+        label_green.grid(row=1, column=0)
+        label_green1.grid(row=1, column=1)
+        label_green2.grid(row=1, column=2)
+        label_green_3.grid(row=1, column=5, sticky='E')
+
+        label_green3.grid(row=2, column=0)
+        label_green4.grid(row=2, column=1)
+        label_green5.grid(row=2, column=2)
+        label_green6.grid(row=2, column=3)
+        label_green_4.grid(row=2, column=5, sticky='E')
+
+        label_green7.grid(row=3, column=0)
+        label_green8.grid(row=3, column=1)
+        label_green9.grid(row=3, column=2)
+        label_green10.grid(row=3, column=3)
+        label_green11.grid(row=3, column=4)
+        label_green_5.grid(row=3, column=5, sticky='E')
+
+        label_purple.grid(row=4, column=0)
+        label_purple1.grid(row=4, column=1)
+        label_purple2.grid(row=4, column=2)
+        label_purple_3.grid(row=4, column=5, sticky='E')
+
+        label_purple3.grid(row=5, column=0)
+        label_purple4.grid(row=5, column=1)
+        label_purple5.grid(row=5, column=2)
+        label_purple6.grid(row=5, column=3)
+        label_purple_4.grid(row=5, column=5, sticky='E')
+
+        label_purple7.grid(row=6, column=0)
+        label_purple8.grid(row=6, column=1)
+        label_purple9.grid(row=6, column=2)
+        label_purple10.grid(row=6, column=3)
+        label_purple11.grid(row=6, column=4)
+        label_purple_5.grid(row=6, column=5, sticky='E')
+
+        label_red.grid(row=7, column=0)
+        label_red1.grid(row=7, column=1)
+        label_red2.grid(row=7, column=2)
+        label_red_3.grid(row=7, column=5, sticky='E')
+
+        label_red3.grid(row=8, column=0)
+        label_red4.grid(row=8, column=1)
+        label_red5.grid(row=8, column=2)
+        label_red6.grid(row=8, column=3)
+        label_red_4.grid(row=8, column=5, sticky='E')
+
+        label_red7.grid(row=9, column=0)
+        label_red8.grid(row=9, column=1)
+        label_red9.grid(row=9, column=2)
+        label_red10.grid(row=9, column=3)
+        label_red11.grid(row=9, column=4)
+        label_red_5.grid(row=9, column=5, sticky='E')
+
+        label_pink.grid(row=10, column=0)
+        label_pink1.grid(row=10, column=1)
+        label_pink2.grid(row=10, column=2)
+        label_pink_3.grid(row=10, column=5, sticky='E')
+
+        label_pink3.grid(row=11, column=0)
+        label_pink4.grid(row=11, column=1)
+        label_pink5.grid(row=11, column=2)
+        label_pink6.grid(row=11, column=3)
+        label_pink_4.grid(row=11, column=5, sticky='E')
+
+        label_pink7.grid(row=12, column=0)
+        label_pink8.grid(row=12, column=1)
+        label_pink9.grid(row=12, column=2)
+        label_pink10.grid(row=12, column=3)
+        label_pink11.grid(row=12, column=4)
+        label_pink_5.grid(row=12, column=5, sticky='E')
 
         button_sound.place(relx=1, rely=1, anchor="se")
 
@@ -218,7 +395,8 @@ class Menu:
         for widget in self.popup_window.winfo_children():
             widget.destroy()
 
-        self.popup_window.title("Settings")
+        self.popup_window.title("Info apie kūrėjus")
+        self.popup_window.geometry("1048x524")
         width, height = 256, 256
 
         image_back = Image.open("graphics/0/symbols/back.png")
@@ -288,6 +466,9 @@ class Menu:
         for widget in self.popup_window.winfo_children():
             widget.destroy()
 
+        self.popup_window.title("Simonas Radžius")
+        self.popup_window.geometry("1048x564")
+
         self.set_dev_music('audio/sr.mp3', self.player.audio_on)
 
         self.popup_window.title("Simonas Radžius")
@@ -320,6 +501,14 @@ class Menu:
 
         label_prof = tk.Label(self.popup_window, text='Profesija: Beisbolkių baryga', bg='#1e1e1e', fg='white',
                              font=('Times New Roman', 18))
+        label_about1 = tk.Label(self.popup_window, text='Daugiausiai prisidėta prie:', bg='#1e1e1e', fg='white',
+                              font=('Times New Roman', 18))
+        label_about2 = tk.Label(self.popup_window, text='  --Aministratoriaus/žaidėjo paskyrų logika, duomenų saugojimas', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 14))
+        label_about3 = tk.Label(self.popup_window, text='  --Muzikos logika', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 14))
+        label_about4 = tk.Label(self.popup_window, text='  --Pinigų išgryninimo logika', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 14))
 
         self.popup_window.columnconfigure(0, weight=1)
 
@@ -328,6 +517,10 @@ class Menu:
         label_dev.grid(row=2, column=0, columnspan=4)
         label_empty.grid(row=3, column=0, columnspan=2)
         label_prof.grid(row=5, column=0, sticky=tk.W)
+        label_about1.grid(row=6, column=0, sticky=tk.W)
+        label_about2.grid(row=7, column=0, sticky=tk.W)
+        label_about3.grid(row=8, column=0, sticky=tk.W)
+        label_about4.grid(row=9, column=0, sticky=tk.W)
 
         button_sound.place(relx=1, rely=1, anchor="se")
 
@@ -336,6 +529,9 @@ class Menu:
     def show_dev2(self):
         for widget in self.popup_window.winfo_children():
             widget.destroy()
+
+        self.popup_window.title("Arnas Pilius")
+        self.popup_window.geometry("1048x564")
 
         self.set_dev_music('audio/ap.mp3', self.player.audio_on)
 
@@ -369,6 +565,14 @@ class Menu:
 
         label_prof = tk.Label(self.popup_window, text='Profesija: Gariūnų viršininkas', bg='#1e1e1e', fg='white',
                               font=('Times New Roman', 18))
+        label_about1 = tk.Label(self.popup_window, text='Daugiausiai prisidėta prie:', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 18))
+        label_about2 = tk.Label(self.popup_window,
+                                text='  --Prisijungimo sistema', bg='#1e1e1e',
+                                fg='white',
+                                font=('Times New Roman', 14))
+        label_about3 = tk.Label(self.popup_window, text='  --Žaidėjo savęs blokavimo sistema', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 14))
 
         self.popup_window.columnconfigure(0, weight=1)
 
@@ -377,6 +581,9 @@ class Menu:
         label_dev.grid(row=2, column=0, columnspan=4)
         label_empty.grid(row=3, column=0, columnspan=2)
         label_prof.grid(row=5, column=0, sticky=tk.W)
+        label_about1.grid(row=6, column=0, sticky=tk.W)
+        label_about2.grid(row=7, column=0, sticky=tk.W)
+        label_about3.grid(row=8, column=0, sticky=tk.W)
 
         button_sound.place(relx=1, rely=1, anchor="se")
 
@@ -385,6 +592,9 @@ class Menu:
     def show_dev3(self):
         for widget in self.popup_window.winfo_children():
             widget.destroy()
+
+        self.popup_window.title("Gytis Baltrušaitis")
+        self.popup_window.geometry("1048x564")
 
         self.set_dev_music('audio/gb.mp3', self.player.audio_on)
 
@@ -418,6 +628,16 @@ class Menu:
 
         label_prof = tk.Label(self.popup_window, text='Profesija: Top G', bg='#1e1e1e', fg='white',
                               font=('Times New Roman', 18))
+        label_about1 = tk.Label(self.popup_window, text='Daugiausiai prisidėta prie:', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 18))
+        label_about2 = tk.Label(self.popup_window,
+                                text='  --Automato logikos karkasas', bg='#1e1e1e',
+                                fg='white',
+                                font=('Times New Roman', 14))
+        label_about3 = tk.Label(self.popup_window, text='  --Didžioji dalis grafinio dizaino', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 14))
+        label_about4 = tk.Label(self.popup_window, text='  --Laimėjimų logika', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 14))
 
         self.popup_window.columnconfigure(0, weight=1)
 
@@ -426,6 +646,10 @@ class Menu:
         label_dev.grid(row=2, column=0, columnspan=4)
         label_empty.grid(row=3, column=0, columnspan=2)
         label_prof.grid(row=5, column=0, sticky=tk.W)
+        label_about1.grid(row=6, column=0, sticky=tk.W)
+        label_about2.grid(row=7, column=0, sticky=tk.W)
+        label_about3.grid(row=8, column=0, sticky=tk.W)
+        label_about4.grid(row=9, column=0, sticky=tk.W)
 
         button_sound.place(relx=1, rely=1, anchor="se")
 
@@ -434,6 +658,9 @@ class Menu:
     def show_dev4(self):
         for widget in self.popup_window.winfo_children():
             widget.destroy()
+
+        self.popup_window.title("Mantas Bačinskas")
+        self.popup_window.geometry("1048x564")
 
         self.set_dev_music('audio/mb.mp3', self.player.audio_on)
 
@@ -467,6 +694,16 @@ class Menu:
 
         label_prof = tk.Label(self.popup_window, text='Profesija: Marozas', bg='#1e1e1e', fg='white',
                               font=('Times New Roman', 18))
+        label_about1 = tk.Label(self.popup_window, text='Daugiausiai prisidėta prie:', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 18))
+        label_about2 = tk.Label(self.popup_window,
+                                text='  --Automato logikos karkasas', bg='#1e1e1e',
+                                fg='white',
+                                font=('Times New Roman', 14))
+        label_about3 = tk.Label(self.popup_window, text='  --Pinigų įdėjimo logika', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 14))
+        label_about4 = tk.Label(self.popup_window, text='  --Statymo sistema', bg='#1e1e1e', fg='white',
+                                font=('Times New Roman', 14))
 
         self.popup_window.columnconfigure(0, weight=1)
 
@@ -475,6 +712,10 @@ class Menu:
         label_dev.grid(row=2, column=0, columnspan=4)
         label_empty.grid(row=3, column=0, columnspan=2)
         label_prof.grid(row=5, column=0, sticky=tk.W)
+        label_about1.grid(row=6, column=0, sticky=tk.W)
+        label_about2.grid(row=7, column=0, sticky=tk.W)
+        label_about3.grid(row=8, column=0, sticky=tk.W)
+        label_about4.grid(row=9, column=0, sticky=tk.W)
 
         button_sound.place(relx=1, rely=1, anchor="se")
 
@@ -627,6 +868,9 @@ class Menu:
     def show_admin(self):
         for widget in self.popup_window.winfo_children():
             widget.destroy()
+
+        self.popup_window.title("Admin menu")
+        self.popup_window.geometry("1048x524")
 
         image_back = Image.open("graphics/0/symbols/back.png")
         resized_image = image_back.resize((32, 32))

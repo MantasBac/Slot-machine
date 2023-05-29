@@ -41,11 +41,11 @@
     ],
     "ww": [
         "w",
-        7420.0,
-        1200,
-        9,
+        7849.9,
+        1450,
+        0,
         "audio/track3.mp3",
-        false,
+        true,
         true,
         false
     ]
